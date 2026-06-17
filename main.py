@@ -8,8 +8,8 @@ from datetime import datetime, timedelta
 import uuid
 import random
 
-CLIENT_ID = "b14303067-817f7217-866b-480a"
-CLIENT_SECRET = "ad612791-48a6-4918-ac95-aae66f94167d"
+CLIENT_ID = ""
+CLIENT_SECRET = ""
 
 app = FastAPI(title="TRA BahnBet API")
 app.mount("/static", StaticFiles(directory="static"), name="static")
