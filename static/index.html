@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TRAbet</title>
+  <style>
+    :root {
+      --bg: #f6f7fb;
+      --card: #ffffff;
+      --text: #101114;
+      --muted: #8a8f9c;
+      --line: #e8eaf0;
+      --red: #e3152c;
+      --dark-red: #9f0018;
+      --green: #19c56b;
+      --yellow: #ffbf2f;
+      --orange: #ff7a1a;
+      --blue: #316bff;
+      --shadow: 0 16px 36px rgba(18, 22, 33, 0.08);
+      --radius: 22px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding-bottom: 96px;
+    }
+
+    button, input, select { font-family: inherit; }
+    button { cursor: pointer; border: 0; }
+
+    .top-nav {
+      height: 64px;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .brand {
+      font-size: 1.55rem;
+      font-weight: 1000;
+      letter-spacing: -1px;
+    }
+
+    .brand span { color: var(--red); }
+
+    .nav-actions { display: flex; align-items: center; gap: 10px; }
+
+    .circle-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      background: #f1f2f6;
+      color: #3c404a;
+      font-weight: 900;
+      display: grid;
+      place-items: center;
+    }
+
+    .login-btn {
+      background: var(--red);
+      color: white;
+      border-radius: 999px;
+      padding: 12px 20px;
+      font-weight: 1000;
+      box-shadow: 0 10px 24px rgba(227, 21, 44, 0.25);
+    }
+
+    .ticker-wrap {
+      margin: 10px 20px 14px;
+      background: #07080d;
+      color: white;
+      border-radius: 14px;
+      overflow: hidden;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      box-shadow: var(--shadow);
+    }
+
+    .ticker {
+      display: flex;
+      white-space: nowrap;
+      animation: ticker 24s linear infinite;
+      gap: 32px;
+      font-weight: 900;
+    }
+
+    .ticker span { color: #a0a4af; }
+    .ticker strong { color: #51ff95; margin-left: 6px; }
+
+    @keyframes ticker {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    .toolbar {
+      margin: 0 20px 18px;
+      display: grid;
+      grid-template-columns: 76px 1fr 110px;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .lang-btn, .filter-btn {
+      height: 52px;
+      border-radius: 18px;
+      background: white;
+      box-shadow: 0 8px 18px rgba(18, 22, 33, 0.08);
+      color: #333842;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .search-box {
+      height: 52px;
+      border-radius: 18px;
+      background: white;
+      box-shadow: 0 8px 18px rgba(18, 22, 33, 0.08);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 18px;
+      color: var(--muted);
+    }
+
+    .search-box input {
+      width: 100%;
+      border: 0;
+      outline: 0;
+      font-size: 1rem;
+      color: var(--text);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 360px;
+      gap: 18px;
+      margin: 0 20px;
+    }
+
+    .market-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .side-panel {
+      display: grid;
+      gap: 18px;
+      align-content: start;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .train-card {
+      padding: 20px;
+      min-height: 360px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .train-title {
+      font-size: 1.65rem;
+      font-weight: 1000;
+      letter-spacing: -0.5px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border-radius: 8px;
+      padding: 4px 9px;
+      font-size: 0.78rem;
+      font-weight: 1000;
+      background: #ffe1e5;
+      color: #a7192b;
+    }
+
+    .delay-price {
+      font-size: 1.65rem;
+      font-weight: 1000;
+      color: var(--text);
+      text-align: right;
+    }
+
+    .route {
+      display: grid;
+      gap: 12px;
+      padding: 8px 0;
+    }
+
+    .route-row {
+      display: grid;
+      grid-template-columns: 24px 1fr auto;
+      gap: 10px;
+      align-items: center;
+      font-weight: 900;
+    }
+
+    .route-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      border: 3px solid #151820;
+      margin: auto;
+    }
+
+    .route-dot.current {
+      background: var(--red);
+      border-color: var(--red);
+      box-shadow: 0 0 0 6px rgba(227,21,44,0.09);
+    }
+
+    .route-line {
+      margin-left: 11px;
+      height: 22px;
+      border-left: 3px dotted #cfd3dc;
+    }
+
+    .time-muted { color: #7b808d; font-weight: 600; }
+
+    .delay-summary {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      color: var(--red);
+      font-weight: 1000;
+      padding-top: 2px;
+    }
+
+    .delay-summary .big { font-size: 1.55rem; color: var(--dark-red); }
+
+    .spark-wrap {
+      height: 76px;
+      background: linear-gradient(180deg, rgba(227,21,44,0.05), rgba(227,21,44,0));
+      border-radius: 14px;
+      border-bottom: 1px dashed #eef0f5;
+      position: relative;
+      overflow: hidden;
+    }
+
+    svg.spark { width: 100%; height: 76px; display: block; }
+
+    .risk-area { display: grid; gap: 8px; }
+    .risk-title { font-weight: 900; color: #4b4f5a; }
+    .risk-bar {
+      height: 14px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: linear-gradient(90deg, #6ad31c 0 56%, #ffbf2f 56% 72%, #ff7a1a 72% 86%, #ec1d35 86% 100%);
+      position: relative;
+    }
+
+    .risk-marker {
+      position: absolute;
+      top: -3px;
+      width: 4px;
+      height: 20px;
+      background: #111827;
+      border-radius: 999px;
+      transform: translateX(-2px);
+    }
+
+    .risk-legend {
+      display: flex;
+      justify-content: space-between;
+      color: #8b909d;
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
+
+    .card-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: auto;
+      align-items: center;
+    }
+
+    .small-action {
+      width: 44px;
+      height: 44px;
+      border-radius: 13px;
+      background: #f1f2f6;
+      font-weight: 1000;
+      color: #5a606d;
+    }
+
+    .bomb {
+      background: #08090d;
+      color: white;
+    }
+
+    .bet-btn {
+      flex: 1;
+      height: 44px;
+      border-radius: 14px;
+      background: linear-gradient(180deg, #f42a3e, #d80725);
+      color: white;
+      font-weight: 1000;
+      font-size: 1rem;
+      box-shadow: 0 10px 20px rgba(227,21,44,0.24);
+    }
+
+    .panel {
+      padding: 18px;
+    }
+
+    .panel-title {
+      font-weight: 1000;
+      font-size: 1.08rem;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .wallet-card {
+      background: linear-gradient(135deg, #101114, #303442);
+      color: white;
+    }
+
+    .wallet-card .panel-title { color: #c9cdd7; }
+    .balance { font-size: 2.2rem; font-weight: 1000; letter-spacing: -1px; }
+    .level-row { display: flex; justify-content: space-between; color: #d7dae2; margin-top: 12px; font-weight: 800; }
+    .xpbar { height: 10px; background: rgba(255,255,255,0.16); border-radius: 999px; overflow: hidden; margin-top: 8px; }
+    .xpbar div { height: 100%; background: var(--green); border-radius: 999px; }
+
+    .mission {
+      background: #fff7db;
+      border: 1px solid #ffe28c;
+      border-radius: 16px;
+      padding: 14px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .mission button {
+      background: #111827;
+      color: white;
+      border-radius: 12px;
+      padding: 10px;
+      font-weight: 1000;
+    }
+
+    .trade-item {
+      border-top: 1px solid var(--line);
+      padding: 12px 0;
+      display: grid;
+      gap: 4px;
+      font-size: 0.92rem;
+    }
+
+    .trade-item:first-of-type { border-top: 0; }
+    .trade-head { display: flex; justify-content: space-between; font-weight: 1000; }
+    .profit { font-weight: 1000; }
+    .profit.gain { color: var(--green); }
+    .profit.loss { color: var(--red); }
+
+    .bottom-nav {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 78px;
+      background: rgba(255,255,255,0.94);
+      backdrop-filter: blur(16px);
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: center;
+      z-index: 30;
+    }
+
+    .bottom-inner {
+      width: min(720px, 100%);
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      align-items: center;
+      text-align: center;
+      font-size: 0.72rem;
+      letter-spacing: 1.3px;
+      font-weight: 1000;
+      color: #747987;
+    }
+
+    .nav-item { display: grid; gap: 4px; justify-items: center; }
+    .nav-item.active { color: var(--red); }
+    .nav-main {
+      width: 64px;
+      height: 64px;
+      border-radius: 999px;
+      background: var(--red);
+      color: white;
+      display: grid;
+      place-items: center;
+      margin: -26px auto 0;
+      border: 5px solid white;
+      box-shadow: 0 18px 45px rgba(227,21,44,0.45);
+      font-size: 1.4rem;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 7, 12, 0.55);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 80;
+    }
+
+    .modal-backdrop.show { display: flex; }
+
+    .modal {
+      width: min(760px, 100%);
+      max-height: 88vh;
+      overflow: auto;
+      background: white;
+      border-radius: 28px;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.28);
+    }
+
+    .modal-head {
+      padding: 20px 22px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      background: white;
+      z-index: 1;
+    }
+
+    .modal-title { font-size: 1.35rem; font-weight: 1000; }
+    .close-btn { width: 38px; height: 38px; border-radius: 999px; background: #f1f2f6; font-weight: 1000; }
+    .modal-body { padding: 22px; }
+
+    .rule-block {
+      background: #f7f8fb;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 15px;
+      margin-bottom: 12px;
+      line-height: 1.7;
+    }
+
+    .bet-form {
+      display: grid;
+      gap: 14px;
+    }
+
+    .form-section {
+      display: grid;
+      gap: 8px;
+    }
+
+    .form-section label {
+      font-weight: 1000;
+    }
+
+    .segmented, .stake-group, .risk-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip {
+      border-radius: 14px;
+      background: #f2f3f7;
+      color: #242934;
+      padding: 10px 14px;
+      font-weight: 1000;
+      border: 2px solid transparent;
+    }
+
+    .chip.active {
+      background: #111827;
+      color: white;
+      border-color: #111827;
+    }
+
+    .chip.long.active { background: #0f9f57; border-color: #0f9f57; }
+    .chip.short.active { background: var(--red); border-color: var(--red); }
+
+    .number-input {
+      width: 100%;
+      height: 48px;
+      border: 1px solid #d9dce5;
+      border-radius: 15px;
+      padding: 0 14px;
+      font-size: 1rem;
+      font-weight: 800;
+      outline: none;
+    }
+
+    .range-row { display: grid; grid-template-columns: 1fr 58px; gap: 10px; align-items: center; }
+    input[type="range"] { width: 100%; }
+
+    .primary-wide {
+      width: 100%;
+      height: 50px;
+      border-radius: 16px;
+      background: var(--red);
+      color: white;
+      font-weight: 1000;
+      font-size: 1rem;
+    }
+
+    .message {
+      position: fixed;
+      left: 50%;
+      top: 78px;
+      transform: translateX(-50%);
+      background: #111827;
+      color: white;
+      padding: 12px 16px;
+      border-radius: 999px;
+      font-weight: 900;
+      box-shadow: var(--shadow);
+      z-index: 100;
+      display: none;
+    }
+
+    .message.show { display: block; }
+    .message.error { background: var(--red); }
+
+    .empty {
+      padding: 18px;
+      color: var(--muted);
+      text-align: center;
+      background: #f7f8fb;
+      border-radius: 16px;
+    }
+
+    .details-toggle {
+      background: transparent;
+      color: var(--blue);
+      font-weight: 1000;
+      padding: 0;
+      text-align: left;
+    }
+
+    details.stop-details {
+      margin-top: 8px;
+      border-top: 1px dashed var(--line);
+      padding-top: 10px;
+    }
+
+    details.stop-details summary {
+      cursor: pointer;
+      color: #4b5160;
+      font-weight: 900;
+    }
+
+    .stop-list {
+      margin-top: 10px;
+      max-height: 180px;
+      overflow: auto;
+      display: grid;
+      gap: 8px;
+      color: #4b5160;
+      font-size: 0.9rem;
+    }
+
+    .stop-row { display: grid; grid-template-columns: 70px 1fr auto; gap: 8px; }
+    .delay-red { color: var(--red); font-weight: 1000; }
+
+    @media (max-width: 1100px) {
+      .layout { grid-template-columns: 1fr; }
+      .side-panel { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 760px) {
+      .toolbar { grid-template-columns: 54px 1fr 82px; gap: 9px; margin-left: 12px; margin-right: 12px; }
+      .market-grid { grid-template-columns: 1fr; }
+      .layout { margin: 0 12px; }
+      .ticker-wrap { margin-left: 12px; margin-right: 12px; }
+      .side-panel { grid-template-columns: 1fr; }
+      .login-btn { padding: 10px 14px; }
+      .brand { font-size: 1.3rem; }
+      .filter-btn span:last-child, .lang-btn span:last-child { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="top-nav">
+    <div class="brand">TRA<span>.</span>延誤交易所</div>
+    <div class="nav-actions">
+      <button class="circle-btn" onclick="toggleTheme()">◐</button>
+      <button class="login-btn" onclick="openRules()">規則</button>
+      <button class="circle-btn" onclick="openMenu()">☰</button>
+    </div>
+  </header>
+
+  <div class="ticker-wrap">
+    <div class="ticker" id="ticker">
+      <span>Ray 在 自強 105 獲利 <strong>+100 點</strong></span>
+      <span>有人買空 區間 2234 <strong>+60 點</strong></span>
+      <span>任務獎勵已開放 <strong>+80 點</strong></span>
+      <span>Ray 在 自強 105 獲利 <strong>+100 點</strong></span>
+      <span>有人買空 區間 2234 <strong>+60 點</strong></span>
+      <span>任務獎勵已開放 <strong>+80 點</strong></span>
+    </div>
+  </div>
+
+  <section class="toolbar">
+    <button class="lang-btn" onclick="refreshAll()"><span>↻</span><span>刷新</span></button>
+    <div class="search-box">
+      <span>⌕</span>
+      <input id="searchInput" placeholder="搜尋車次、車種、車站，例如 105、台北、區間..." oninput="renderMarkets()" />
+    </div>
+    <button class="filter-btn" onclick="openRules()"><span>⌁</span><span>規則</span></button>
+  </section>
+
+  <main class="layout">
+    <section>
+      <div class="market-grid" id="marketGrid"></div>
+    </section>
+
+    <aside class="side-panel">
+      <div class="card wallet-card panel">
+        <div class="panel-title">我的錢包 <span id="winStreak">0 連勝</span></div>
+        <div class="balance"><span id="balance">--</span> 點</div>
+        <div class="level-row"><span>Lv.<span id="level">1</span></span><span>XP <span id="xp">0</span></span></div>
+        <div class="xpbar"><div id="xpbar" style="width:0%"></div></div>
+      </div>
+
+      <div class="card panel">
+        <div class="panel-title">每日任務 <button class="details-toggle" onclick="claimMission()">領取</button></div>
+        <div class="mission">
+          <strong id="missionTitle">完成 3 筆交易</strong>
+          <div id="missionProgress">0 / 3</div>
+          <div>獎勵：<strong id="missionReward">80</strong> 點</div>
+        </div>
+      </div>
+
+      <div class="card panel">
+        <div class="panel-title">我的交易 <button class="details-toggle" onclick="settleAll()">全部結算</button></div>
+        <div id="myBets"></div>
+      </div>
+    </aside>
+  </main>
+
+  <nav class="bottom-nav">
+    <div class="bottom-inner">
+      <div class="nav-item active"><div>🚆</div><div>列車</div></div>
+      <div class="nav-item"><div>◎</div><div>車站</div></div>
+      <div class="nav-item"><div class="nav-main">↯</div><div>下注</div></div>
+      <div class="nav-item"><div>▣</div><div>錢包</div></div>
+      <div class="nav-item"><div>🏆</div><div>排行</div></div>
+    </div>
+  </nav>
+
+  <div class="message" id="message"></div>
+
+  <div class="modal-backdrop" id="rulesModal">
+    <div class="modal">
+      <div class="modal-head">
+        <div class="modal-title">下注規則：看懂這個就會玩</div>
+        <button class="close-btn" onclick="closeRules()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="rule-block">
+          <strong>1. 遊戲目標</strong><br>
+          猜未來會誤點多久。依據準確程度給予返點，越接近返點越多。
+        </div>
+        <div class="rule-block">
+          <strong>2. 選擇延誤增加或減少</strong><br>
+          📈 猜延誤增加。例：現在 +10 分，5 分鐘後變 +14 分，你就賺。<br>
+          📉 猜延誤減少。例：現在 +10 分，5 分鐘後變 +6 分，你就賺。
+        </div>
+        <div class="rule-block">
+          <strong>3. 預測變化量怎麼填？</strong><br>
+          填「變化幾分鐘」。猜延誤增加填3代表你猜延誤會 +3；猜延誤減少填 3 代表你猜延誤會 -3。
+        </div>
+        <div class="rule-block">
+          <strong>4. 風險模式</strong><br>
+          保守：賺少但也比較不痛。標準：正常倍率。激進：猜對賺更多，猜錯也更容易賠光本金。
+        </div>
+        <div class="rule-block">
+          <strong>5. 信心值</strong><br>
+          信心越高，猜對時加成比較高；但猜錯時也會扣比較多。新手建議先用 40～60。
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="betModal">
+    <div class="modal">
+      <div class="modal-head">
+        <div class="modal-title" id="betModalTitle">下注</div>
+        <button class="close-btn" onclick="closeBetModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div id="betTrainInfo" class="rule-block"></div>
+        <div class="bet-form">
+          <div class="form-section">
+            <label>方向</label>
+            <div class="segmented">
+              <button class="chip long active" id="dirLong" onclick="setBetDirection('long')">📈 猜延誤增加</button>
+              <button class="chip short" id="dirShort" onclick="setBetDirection('short')">📉 猜延誤減少</button>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <label>預測 5 分鐘後延誤變化量</label>
+            <input class="number-input" type="number" id="predictionInput" min="0" max="120" value="1" />
+          </div>
+
+          <div class="form-section">
+            <label>投入本金</label>
+            <div class="stake-group" id="stakeGroup"></div>
+          </div>
+
+          <div class="form-section">
+            <label>風險模式</label>
+            <div class="risk-group">
+              <button class="chip" onclick="setRisk('safe')" id="riskSafe">保守</button>
+              <button class="chip active" onclick="setRisk('standard')" id="riskStandard">標準</button>
+              <button class="chip" onclick="setRisk('bold')" id="riskBold">激進</button>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <label>信心值</label>
+            <div class="range-row">
+              <input type="range" min="1" max="100" value="50" id="confidenceInput" oninput="document.getElementById('confidenceValue').textContent=this.value" />
+              <strong><span id="confidenceValue">50</span>%</strong>
+            </div>
+          </div>
+
+          <button class="primary-wide" onclick="placeBet()">確認下注</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  let markets = [];
+  let myBets = [];
+  let me = null;
+  let currentBetTrain = null;
+  let betDirection = "long";
+  let selectedStake = 50;
+  let selectedRisk = "standard";
+
+  function showMessage(text, type = "success") {
+    const el = document.getElementById("message");
+    el.textContent = text;
+    el.className = `message show ${type === "error" ? "error" : ""}`;
+    setTimeout(() => { el.className = "message"; }, 2600);
+  }
+
+  function openRules() { document.getElementById("rulesModal").classList.add("show"); }
+  function closeRules() { document.getElementById("rulesModal").classList.remove("show"); }
+
+  function formatTime(isoString) {
+    if (!isoString) return "—";
+    try {
+      const date = new Date(isoString);
+      if (isNaN(date.getTime())) return isoString;
+      return date.toLocaleTimeString("zh-TW", { hour: "2-digit", minute: "2-digit", hour12: false });
+    } catch { return isoString; }
+  }
+
+  function formatSignedMinutes(value) {
+    const n = Number(value || 0);
+    if (n > 0) return `+${n}m`;
+    if (n < 0) return `${n}m`;
+    return "0m";
+  }
+
+  function directionText(direction) {
+    return direction === "long" ? "📈 猜延誤增加" : "📉 猜延誤減少";
+  }
+
+  function riskText(risk) {
+    return { safe: "保守", standard: "標準", bold: "激進" }[risk] || "標準";
+  }
+
+  function makeSparkline(values) {
+    if (!Array.isArray(values) || values.length < 2) return "";
+    const w = 320, h = 76, pad = 8;
+    const max = Math.max(...values, 1);
+    const min = Math.min(...values, 0);
+    const range = Math.max(1, max - min);
+    const points = values.map((v, i) => {
+      const x = pad + i * ((w - pad * 2) / (values.length - 1));
+      const y = h - pad - ((v - min) / range) * (h - pad * 2);
+      return `${x},${y}`;
+    }).join(" ");
+    const area = `${pad},${h-pad} ${points} ${w-pad},${h-pad}`;
+    return `
+      <svg class="spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">
+        <polygon points="${area}" fill="rgba(227,21,44,0.16)"></polygon>
+        <polyline points="${points}" fill="none" stroke="#e3152c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></polyline>
+        <circle cx="${points.split(" ").pop().split(",")[0]}" cy="${points.split(" ").pop().split(",")[1]}" r="4" fill="#e3152c"></circle>
+      </svg>`;
+  }
+
+  function renderStops(train) {
+    const stops = Array.isArray(train.timetable_stops) ? train.timetable_stops : [];
+    if (stops.length === 0) return `<div class="empty">目前沒有完整停靠站資料</div>`;
+    return `
+      <details class="stop-details">
+        <summary>${stops.length} 站停靠表</summary>
+        <div class="stop-list">
+          ${stops.map(stop => {
+            const hasDelay = stop.delay_time !== null && stop.delay_time !== undefined && stop.delay_time !== "";
+            const delayText = hasDelay ? formatSignedMinutes(stop.delay_time) : "—";
+            return `<div class="stop-row"><span>${stop.time || "—"}</span><strong>${stop.station_name || "—"}</strong><span class="${Number(stop.delay_time || 0) > 0 ? "delay-red" : ""}">${delayText}</span></div>`;
+          }).join("")}
+        </div>
+      </details>`;
+  }
+
+  function renderTrainCard(train) {
+    const status = train.delay_status || { label: "延誤", class_name: "normal", risk: train.risk_score || 20 };
+    const risk = Math.max(0, Math.min(100, Number(train.risk_score || status.risk || 0)));
+    const firstTime = train.timetable_stops?.[0]?.time || "—";
+    const currentTime = train.scheduled_departure_time !== "—" ? train.scheduled_departure_time : (train.scheduled_arrival_time || "—");
+
+    return `
+      <article class="card train-card">
+        <div class="card-head">
+          <div class="train-title">
+            ${train.train_type} ${train.train_no}
+            <span class="badge">🚆 ${status.label}</span>
+          </div>
+          <div class="delay-price">+${train.delay_time}m</div>
+        </div>
+
+        <div class="route">
+          <div class="route-row">
+            <div class="route-dot"></div>
+            <div>${train.starting_station || "—"}</div>
+            <div class="time-muted">${firstTime}</div>
+          </div>
+          <div class="route-line"></div>
+          <div class="route-row">
+            <div class="route-dot current"></div>
+            <div>${train.current_station || "—"}</div>
+            <div class="time-muted">${currentTime}</div>
+          </div>
+        </div>
+
+        <div class="delay-summary">
+          <div>${Number(train.delay_time) >= 30 ? "嚴重誤點" : "誤點中"}</div>
+          <div class="big">+${train.delay_time}m</div>
+        </div>
+
+        <div class="spark-wrap">${makeSparkline(train.sparkline)}</div>
+
+        <div class="risk-area">
+          <div class="risk-title">延誤風險：${risk}%</div>
+          <div class="risk-bar"><div class="risk-marker" style="left:${risk}%"></div></div>
+          <div class="risk-legend"><span>準點</span><span>+15m</span><span>+30m</span><span>+60m</span></div>
+        </div>
+
+        ${renderStops(train)}
+
+        <div class="card-actions">
+          <button class="small-action" onclick="showMessage('之後可做留言區')">▣</button>
+          <button class="small-action bomb" onclick="openRules()">●</button>
+          <button class="bet-btn" onclick="openBetModal('${train.train_no}')">立即下注</button>
+        </div>
+      </article>`;
+  }
+
+  function renderMarkets() {
+    const grid = document.getElementById("marketGrid");
+    const q = document.getElementById("searchInput").value.trim().toLowerCase();
+    const filtered = markets.filter(t => {
+      const text = `${t.train_no} ${t.train_type} ${t.starting_station} ${t.ending_station} ${t.current_station}`.toLowerCase();
+      return text.includes(q);
+    });
+    grid.innerHTML = filtered.length ? filtered.map(renderTrainCard).join("") : `<div class="empty">找不到符合的列車</div>`;
+  }
+
+  function renderMe() {
+    if (!me) return;
+    document.getElementById("balance").textContent = me.balance;
+    document.getElementById("level").textContent = me.level;
+    document.getElementById("xp").textContent = me.xp;
+    document.getElementById("winStreak").textContent = `${me.win_streak || 0} 連勝`;
+    const xpNeed = Math.max(100, Number(me.level || 1) * 100);
+    document.getElementById("xpbar").style.width = `${Math.min(100, Number(me.xp || 0) / xpNeed * 100)}%`;
+
+    const mission = me.daily_mission || {};
+    document.getElementById("missionTitle").textContent = mission.title || "完成 3 筆交易";
+    document.getElementById("missionProgress").textContent = `${mission.progress || 0} / ${mission.target || 3}${mission.claimed ? "（已領取）" : ""}`;
+    document.getElementById("missionReward").textContent = mission.reward || 80;
+  }
+
+  function renderMyBets() {
+    const box = document.getElementById("myBets");
+    if (!myBets.length) {
+      box.innerHTML = `<div class="empty">目前沒有交易</div>`;
+      return;
+    }
+    box.innerHTML = myBets.slice(0, 8).map(bet => {
+      const profitClass = Number(bet.profit || 0) >= 0 ? "gain" : "loss";
+      return `
+        <div class="trade-item">
+          <div class="trade-head"><span>${bet.train_type} ${bet.train_no}</span><span>${directionText(bet.direction)}</span></div>
+          <div>${bet.starting_station} → ${bet.ending_station}</div>
+          <div>預測 ${formatSignedMinutes(bet.prediction_change)}｜本金 ${bet.stake}｜${riskText(bet.risk_level)}</div>
+          ${bet.status === "open"
+            ? `<div>倒數 ${bet.seconds_left} 秒 <button class="details-toggle" onclick="settleOne('${bet.bet_id}')">結算</button></div>`
+            : `<div>實際 ${formatSignedMinutes(bet.actual_change)}｜<span class="profit ${profitClass}">${bet.profit} 點</span></div>`
+          }
+        </div>`;
+    }).join("");
+  }
+
+  function openBetModal(trainNo) {
+    currentBetTrain = markets.find(t => t.train_no === trainNo);
+    if (!currentBetTrain) return;
+    betDirection = "long";
+    selectedStake = 50;
+    selectedRisk = "standard";
+    document.getElementById("predictionInput").value = 1;
+    document.getElementById("confidenceInput").value = 50;
+    document.getElementById("confidenceValue").textContent = 50;
+    document.getElementById("betModalTitle").textContent = `${currentBetTrain.train_type} ${currentBetTrain.train_no} 下注`;
+    document.getElementById("betTrainInfo").innerHTML = `
+      <strong>${currentBetTrain.starting_station} → ${currentBetTrain.ending_station}</strong><br>
+      目前站：${currentBetTrain.current_station}｜目前延誤：+${currentBetTrain.delay_time} 分<br>
+      提醒：下注後 5 分鐘才能結算。
+    `;
+    renderStakeButtons();
+    updateBetChips();
+    document.getElementById("betModal").classList.add("show");
+  }
+
+  function closeBetModal() { document.getElementById("betModal").classList.remove("show"); }
+
+  function setBetDirection(dir) { betDirection = dir; updateBetChips(); }
+  function setRisk(risk) { selectedRisk = risk; updateBetChips(); }
+  function setStake(stake) { selectedStake = stake; renderStakeButtons(); }
+
+  function renderStakeButtons() {
+    const group = document.getElementById("stakeGroup");
+    group.innerHTML = [10,20,50,100,200,500].map(v => `<button class="chip ${selectedStake === v ? "active" : ""}" onclick="setStake(${v})">${v}</button>`).join("");
+  }
+
+  function updateBetChips() {
+    document.getElementById("dirLong").classList.toggle("active", betDirection === "long");
+    document.getElementById("dirShort").classList.toggle("active", betDirection === "short");
+    document.getElementById("riskSafe").classList.toggle("active", selectedRisk === "safe");
+    document.getElementById("riskStandard").classList.toggle("active", selectedRisk === "standard");
+    document.getElementById("riskBold").classList.toggle("active", selectedRisk === "bold");
+  }
+
+  async function placeBet() {
+    if (!currentBetTrain) return;
+    const prediction = Number(document.getElementById("predictionInput").value);
+    const confidence = Number(document.getElementById("confidenceInput").value);
+    if (!Number.isInteger(prediction) || prediction < 0) {
+      showMessage("請輸入合法的預測變化量", "error");
+      return;
+    }
+    try {
+      const res = await fetch("/api/bet", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+        train_no: currentBetTrain.train_no,
+        direction: betDirection,
+        prediction_change: prediction,
+        stake: selectedStake,
+        risk_level: selectedRisk,
+        confidence: confidence
+      })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.detail || "下注失敗");
+      closeBetModal();
+      showMessage(data.message);
+      await refreshAll();
+    } catch (err) {
+      showMessage(err.message, "error");
+    }
+  }
+
+  async function settleOne(betId) {
+    try {
+      const res = await fetch(`/api/settle/${betId}`, { method: "POST" });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.detail || "結算失敗");
+      showMessage(data.message);
+      await refreshAll();
+    } catch (err) { showMessage(err.message, "error"); }
+  }
+
+  async function settleAll() {
+    try {
+      const res = await fetch("/api/settle-all", { method: "POST" });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.detail || "全部結算失敗");
+      showMessage(data.results?.length ? `已結算 ${data.results.length} 筆` : "目前沒有可結算的交易");
+      await refreshAll();
+    } catch (err) { showMessage(err.message, "error"); }
+  }
+
+  async function claimMission() {
+    try {
+      const res = await fetch("/api/claim-mission", { method: "POST" });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.detail || "領取失敗");
+      showMessage(data.message);
+      await refreshAll();
+    } catch (err) { showMessage(err.message, "error"); }
+  }
+
+  async function refreshAll() {
+    try {
+      const [meRes, marketRes, betsRes] = await Promise.all([
+        fetch("/api/me"),
+        fetch("/api/markets"),
+        fetch("/api/my-bets")
+      ]);
+      me = await meRes.json();
+      markets = await marketRes.json();
+      myBets = await betsRes.json();
+      if (!meRes.ok) throw new Error(me.detail || "載入使用者資料失敗");
+      if (!marketRes.ok) throw new Error(markets.detail || "載入列車失敗");
+      if (!betsRes.ok) throw new Error(myBets.detail || "載入交易失敗");
+      renderMe();
+      renderMarkets();
+      renderMyBets();
+    } catch (err) {
+      showMessage(err.message, "error");
+    }
+  }
+
+  document.getElementById("rulesModal").addEventListener("click", e => {
+    if (e.target.id === "rulesModal") closeRules();
+  });
+  document.getElementById("betModal").addEventListener("click", e => {
+    if (e.target.id === "betModal") closeBetModal();
+  });
+
+  refreshAll();
+  setInterval(refreshAll, 60000);
+</script>
+</body>
+</html>
