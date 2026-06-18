@@ -7,9 +7,13 @@ from typing import Dict, Literal, Optional
 from datetime import datetime, timedelta
 import uuid
 import random
+import os
+from dotenv import load_dotenv
 
-CLIENT_ID = ""
-CLIENT_SECRET = ""
+load_dotenv()
+
+CLIENT_ID = os.getenv("CLIENT_ID")
+CLIENT_SECRET = os.getenv("CLIENT_SECRET")
 
 app = FastAPI(title="TRA BahnBet API")
 app.mount("/static", StaticFiles(directory="static"), name="static")
